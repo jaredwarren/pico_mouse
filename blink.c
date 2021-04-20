@@ -18,6 +18,15 @@ int main() {
         sleep_ms(150);
         gpio_put(LED_PIN, 0);
         sleep_ms(150);
+        gpio_put(LED_PIN, 1);
+        sleep_ms(350);
+        gpio_put(LED_PIN, 0);
+        sleep_ms(350);
+
+        gpio_put(LED_PIN, 1);
+        sleep_ms(1350);
+        gpio_put(LED_PIN, 0);
+        sleep_ms(1350);
     }
 #endif
 }

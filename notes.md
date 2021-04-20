@@ -1,18 +1,24 @@
-notes.md
 
 
+## Docker
 build: `docker build  -t pico .`
 Run: `docker run --rm pico  `
 
 
 
 
-building uf2
+## building uf2
 
+`docker run -it --rm -v `pwd`:/blink -w /blink pico /bin/bash`
 
-docker run -it --rm -v `pwd`:/blink -w /blink pico /bin/bash
-$ mkdir build
-$ cd build
-$ cmake ..
+first
+$ `mkdir build`
+$ `cd build`
+$ `cmake ..`
+$ `make blink`
 
-$ make blink
+re-build
+`docker run -it --rm -v `pwd`:/blink -w /blink pico /bin/bash`
+
+$ `cd build`
+$ `make blink`
