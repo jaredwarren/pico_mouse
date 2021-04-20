@@ -1,23 +1,16 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.12)
 
-# initialize the SDK based on PICO_SDK_PATH
-# note: this must happen before project()
 include(pico_sdk_import.cmake)
 
-project(my_project)
+project(picolights)
 
-# initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-# rest of your project
+add_executable(picolights)
 
+pico_generate_pio_header(picolights ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio)
 
-add_executable(blink
-    blink.c
-)
+target_sources(picolights PRIVATE picolights.c)
 
-# Add pico_stdlib library which aggregates commonly used features
-target_link_libraries(blink pico_stdlib)
-
-# create map/bin/hex/uf2 file in addition to ELF.
-pico_add_extra_outputs(blink)
+target_link_libraries(picolights PRIVATE pico_stdlib hardware_pio pico_multicore)
+pico_add_extra_outputs(picolights)
