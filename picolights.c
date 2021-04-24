@@ -40,60 +40,175 @@ int main() {
     sleep_ms(2000);
 
     while (1) {
-        long sound_intensity = 0;
+        // long sound_intensity = 0;
         // for(int i=0; i<32; i++) {
         //     sound_intensity += adc_read();
         // }
         // sound_intensity >>= 5;
 
-        pixels[3]  = pixels[2];
-        pixels[4]  = pixels[5];
-        pixels[11] = pixels[10];
-        pixels[15] = pixels[14];
 
-        pixels[2]  = pixels[1];
-        pixels[5]  = pixels[6];
-        pixels[10] = pixels[9];
-        pixels[14] = pixels[13];
+        // for(int i=0; i<N_PIXELS; i++) {
+        //     // pixels[i] = rand();
 
-        pixels[1]  = pixels[0];
-        pixels[6]  = pixels[7];
-        pixels[9]  = pixels[8];
-        pixels[13] = pixels[12];
+        //     pixels[i] = urgb_u32(0xff, 0, 0)
+        //     // pixels[i] = urgb_u32(0, 0, 0)
+        //     // 0xff, 0, 0
 
-        sound_intensity = 2200;
+        //     // pixels[3]
+		// 	// valueb=(pixelsb[i] + errorsb[i]) >> shift;
+		// 	// valuer=(pixelsr[i] + errorsr[i]) >> shift;
+		// 	// valueg=(pixelsg[i] + errorsg[i]) >> shift;
 
-        if (sound_intensity >= 2200) {
-            pixels[0]  = rand();
-            pixels[7]  = rand();
-            pixels[8]  = rand();
-            pixels[12] = rand();
-        } else if (sound_intensity >= 1700) {
-            pixels[0]  = rand();
-            pixels[7]  = rand();
-            pixels[8]  = rand();
-            pixels[12] = urgb_u32(0, 0, 0);
-        } else if (sound_intensity >= 1250) {
-            pixels[0]  = rand();
-            pixels[7]  = rand();
-            pixels[8]  = urgb_u32(0, 0, 0);
-            pixels[12] = urgb_u32(0, 0, 0);
-        } else if (sound_intensity >= 800) {
-            pixels[0]  = rand();
-            pixels[7]  = urgb_u32(0, 0, 0);
-            pixels[8]  = urgb_u32(0, 0, 0);
-            pixels[12] = urgb_u32(0, 0, 0);
-        } else {
-            pixels[0]  = urgb_u32(0, 0, 0);
-            pixels[7]  = urgb_u32(0, 0, 0);
-            pixels[8]  = urgb_u32(0, 0, 0);
-            pixels[12] = urgb_u32(0, 0, 0);
-        }
+		// 	// put_pixel(urgb_u32(valuer, valueg, valueb));
+		// 	// errorsb[i] = (pixelsb[i] + errorsb[i]) - (valueb << shift); 
+		// 	// errorsr[i] = (pixelsr[i] + errorsr[i]) - (valuer << shift); 
+		// 	// errorsg[i] = (pixelsg[i] + errorsg[i]) - (valueg << shift); 
 
-        for (uint8_t i = 0; i < N_PIXELS; i++) {
-            put_pixel(pixels[i]);
-        }
+        //     put_pixel(pixels[i]);
+        //     // sleep_ms(50);
+		// }
 
-        sleep_ms(200);
+        long steps = 128;
+
+        // fade in
+        for(int j=0; j<steps; j++) {
+            for(int i=0; i<N_PIXELS; i++) {
+                pixels[i] = urgb_u32(j, 0, 0);
+                put_pixel(pixels[i]);
+            }
+            sleep_ms(50);
+		}
+        sleep_ms(250);
+
+        // fade out
+        for(int j=steps; j>0; j--) {
+            for(int i=0; i<N_PIXELS; i++) {
+                pixels[i] = urgb_u32(j, 0, 0);
+                put_pixel(pixels[i]);
+            }
+            sleep_ms(50);
+		}
+        sleep_ms(250);
+
+        // blue
+        // fade in
+        for(int j=0; j<steps; j++) {
+            for(int i=0; i<N_PIXELS; i++) {
+                pixels[i] = urgb_u32(0, 0, j);
+                put_pixel(pixels[i]);
+            }
+            sleep_ms(50);
+		}
+        sleep_ms(250);
+
+        // fade out
+        for(int j=steps; j>0; j--) {
+            for(int i=0; i<N_PIXELS; i++) {
+                pixels[i] = urgb_u32(0, 0, j);
+                put_pixel(pixels[i]);
+            }
+            sleep_ms(50);
+		}
+        sleep_ms(250);
+
+        
+        // sleep_ms(250);
+        // for(int i=0; i<N_PIXELS; i++) {
+        //     pixels[i] = urgb_u32(0x80, 0, 0);
+        //     put_pixel(pixels[i]);
+		// }
+        // sleep_ms(250);
+        // for(int i=0; i<N_PIXELS; i++) {
+        //     pixels[i] = urgb_u32(0x40, 0, 0);
+        //     put_pixel(pixels[i]);
+		// }
+        // sleep_ms(250);
+        // for(int i=0; i<N_PIXELS; i++) {
+        //     pixels[i] = urgb_u32(0x20, 0, 0);
+        //     put_pixel(pixels[i]);
+		// }
+        // sleep_ms(250);
+        // for(int i=0; i<N_PIXELS; i++) {
+        //     pixels[i] = urgb_u32(0, 0, 0);
+        //     put_pixel(pixels[i]);
+		// }
+        // sleep_ms(1000);
+
+
+        // for(int i=0; i<N_PIXELS; i++) {
+        //     pixels[i] = urgb_u32(0, 0, 0xff);
+        //     put_pixel(pixels[i]);
+		// }
+        // sleep_ms(250);
+        // for(int i=0; i<N_PIXELS; i++) {
+        //     pixels[i] = urgb_u32(0, 0, 0x80);
+        //     put_pixel(pixels[i]);
+		// }
+        // sleep_ms(250);
+        // for(int i=0; i<N_PIXELS; i++) {
+        //     pixels[i] = urgb_u32(0, 0, 0x40);
+        //     put_pixel(pixels[i]);
+		// }
+        // sleep_ms(250);
+        // for(int i=0; i<N_PIXELS; i++) {
+        //     pixels[i] = urgb_u32(0, 0, 0x20);
+        //     put_pixel(pixels[i]);
+		// }
+        // sleep_ms(250);
+        // for(int i=0; i<N_PIXELS; i++) {
+        //     pixels[i] = urgb_u32(0, 0, 0);
+        //     put_pixel(pixels[i]);
+		// }
+        // sleep_ms(1000);
+
+        // pixels[3]  = pixels[2];
+        // pixels[4]  = pixels[5];
+        // pixels[11] = pixels[10];
+        // pixels[15] = pixels[14];
+
+        // pixels[2]  = pixels[1];
+        // pixels[5]  = pixels[6];
+        // pixels[10] = pixels[9];
+        // pixels[14] = pixels[13];
+
+        // pixels[1]  = pixels[0];
+        // pixels[6]  = pixels[7];
+        // pixels[9]  = pixels[8];
+        // pixels[13] = pixels[12];
+
+        // sound_intensity = 2200;
+
+        // if (sound_intensity >= 2200) {
+        //     pixels[0]  = rand();
+        //     pixels[7]  = rand();
+        //     pixels[8]  = rand();
+        //     pixels[12] = rand();
+        // } else if (sound_intensity >= 1700) {
+        //     pixels[0]  = rand();
+        //     pixels[7]  = rand();
+        //     pixels[8]  = rand();
+        //     pixels[12] = urgb_u32(0, 0, 0);
+        // } else if (sound_intensity >= 1250) {
+        //     pixels[0]  = rand();
+        //     pixels[7]  = rand();
+        //     pixels[8]  = urgb_u32(0, 0, 0);
+        //     pixels[12] = urgb_u32(0, 0, 0);
+        // } else if (sound_intensity >= 800) {
+        //     pixels[0]  = rand();
+        //     pixels[7]  = urgb_u32(0, 0, 0);
+        //     pixels[8]  = urgb_u32(0, 0, 0);
+        //     pixels[12] = urgb_u32(0, 0, 0);
+        // } else {
+        //     pixels[0]  = urgb_u32(0, 0, 0);
+        //     pixels[7]  = urgb_u32(0, 0, 0);
+        //     pixels[8]  = urgb_u32(0, 0, 0);
+        //     pixels[12] = urgb_u32(0, 0, 0);
+        // }
+
+        // for (uint8_t i = 0; i < N_PIXELS; i++) {
+        //     put_pixel(pixels[i]);
+        // }
+
+        // sleep_ms(200);
     }
 }
