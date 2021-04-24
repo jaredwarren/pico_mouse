@@ -29,4 +29,4 @@ $ `make blink`
 # picolights
 docker run -it --rm -v `pwd`:/blink -w /blink pico /bin/bash
 $ `cd build`
-$ `make picolights`?
+$ `make picolights`

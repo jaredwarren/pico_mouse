@@ -13,7 +13,7 @@
 #include "ws2812.pio.h"
 #include "pico/multicore.h"
 
-#define STRING_LEN 32
+#define STRING_LEN 6
 
 int bit_depth=12;
 const int PIN_TX = 0;
@@ -39,23 +39,47 @@ static inline uint32_t urgb_u32(uint8_t r, uint8_t g, uint8_t b) {
 }
 
 void ws2812b_core() {
-	int valuer, valueg, valueb;
-	int shift = bit_depth-8;
-	
-    while (1){
-		
-		for(int i=0; i<STRING_LEN; i++) {
-			valueb=(pixelsb[i] + errorsb[i]) >> shift;
-			valuer=(pixelsr[i] + errorsr[i]) >> shift;
-			valueg=(pixelsg[i] + errorsg[i]) >> shift;
+#ifndef PICO_DEFAULT_LED_PIN
+#warning blink example requires a board with a regular LED
+#else
+    const uint LED_PIN = PICO_DEFAULT_LED_PIN;
+    gpio_init(LED_PIN);
+    gpio_set_dir(LED_PIN, GPIO_OUT);
+    while (true) {
+        gpio_put(LED_PIN, 1);
+        sleep_ms(150);
+        gpio_put(LED_PIN, 0);
+        sleep_ms(150);
+        gpio_put(LED_PIN, 1);
+        sleep_ms(350);
+        gpio_put(LED_PIN, 0);
+        sleep_ms(350);
 
-			put_pixel(urgb_u32(valuer, valueg, valueb));
-			errorsb[i] = (pixelsb[i] + errorsb[i]) - (valueb << shift); 
-			errorsr[i] = (pixelsr[i] + errorsr[i]) - (valuer << shift); 
-			errorsg[i] = (pixelsg[i] + errorsg[i]) - (valueg << shift); 
-		}
-		sleep_us(400);
-	}
+        gpio_put(LED_PIN, 1);
+        sleep_ms(1350);
+        gpio_put(LED_PIN, 0);
+        sleep_ms(1350);
+    }
+#endif
+
+
+	// int valuer, valueg, valueb;
+	// int shift = bit_depth-8;
+	
+    // while (1){
+		
+	// 	for(int i=0; i<STRING_LEN; i++) {
+	// 		valueb=(pixelsb[i] + errorsb[i]) >> shift;
+	// 		valuer=(pixelsr[i] + errorsr[i]) >> shift;
+	// 		valueg=(pixelsg[i] + errorsg[i]) >> shift;
+
+	// 		put_pixel(urgb_u32(valuer, valueg, valueb));
+	// 		errorsb[i] = (pixelsb[i] + errorsb[i]) - (valueb << shift); 
+	// 		errorsr[i] = (pixelsr[i] + errorsr[i]) - (valuer << shift); 
+	// 		errorsg[i] = (pixelsg[i] + errorsg[i]) - (valueg << shift); 
+	// 	}
+	// 	sleep_us(400);
+	// }
 }	
 		
 
@@ -75,31 +99,51 @@ int main() {
 		pixelsb[i]=0;
 	}
  
-	// multicore_launch_core1(ws2812b_core);
+	multicore_launch_core1(ws2812b_core);
+
+    int valuer, valueg, valueb;
+	int shift = bit_depth-8;
+	
+    while (1){
+		
+		for(int i=0; i<STRING_LEN; i++) {
+			valueb=(pixelsb[i] + errorsb[i]) >> shift;
+			valuer=(pixelsr[i] + errorsr[i]) >> shift;
+			valueg=(pixelsg[i] + errorsg[i]) >> shift;
+
+			put_pixel(urgb_u32(valuer, valueg, valueb));
+			errorsb[i] = (pixelsb[i] + errorsb[i]) - (valueb << shift); 
+			errorsr[i] = (pixelsr[i] + errorsr[i]) - (valuer << shift); 
+			errorsg[i] = (pixelsg[i] + errorsg[i]) - (valueg << shift); 
+		}
+		sleep_us(400);
+	}
    
-    while (1) {
-        for(int i=0; i< STRING_LEN; ++i) {
-            pixelsr[i]=128;
-            pixelsg[i]=0;
-            pixelsb[i]=0;
-            sleep_ms(50);
-        }
-        sleep_ms(500);
+    // while (1) {
 
-        for(int i=0; i< STRING_LEN; ++i) {
-            pixelsr[i]=0;
-            pixelsg[i]=0;
-            pixelsb[i]=0;
-        }
-        sleep_ms(100);
+        
+        // for(int i=0; i< STRING_LEN; ++i) {
+        //     pixelsr[i]=128;
+        //     pixelsg[i]=0;
+        //     pixelsb[i]=0;
+        //     sleep_ms(50);
+        // }
+        // sleep_ms(500);
 
-        for(int i=0; i< STRING_LEN; ++i) {
-            pixelsr[i]=0;
-            pixelsg[i]=255;
-            pixelsb[i]=0;
-            sleep_ms(50);
-        }
-        sleep_ms(500);
+        // for(int i=0; i< STRING_LEN; ++i) {
+        //     pixelsr[i]=0;
+        //     pixelsg[i]=0;
+        //     pixelsb[i]=0;
+        // }
+        // sleep_ms(100);
+
+        // for(int i=0; i< STRING_LEN; ++i) {
+        //     pixelsr[i]=0;
+        //     pixelsg[i]=255;
+        //     pixelsb[i]=0;
+        //     sleep_ms(50);
+        // }
+        // sleep_ms(500);
 
         // for (int i = 0; i < 30; ++i) {
 		// 	for (int j=0;j<30;++j){
@@ -137,5 +181,5 @@ int main() {
 		// 		sleep_ms(50);
 		// 	}
         // }
-    }
+    // }
 }
