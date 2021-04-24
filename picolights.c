@@ -75,45 +75,67 @@ int main() {
 		pixelsb[i]=0;
 	}
  
-	multicore_launch_core1(ws2812b_core);
+	// multicore_launch_core1(ws2812b_core);
    
     while (1) {
-        for (int i = 0; i < 30; ++i) {
-			
-			for (int j=0;j<30;++j){
-				pixelsb[0] = j;
-				if(j%8 == 0) { pixelsb[1] = j; }
-				pixelsr[2] = j;
-				if(j%8 == 0) { pixelsr[3] = j; }
-				pixelsg[4] = j;
-				if(j%8 == 0) { pixelsg[5] = j; }
-				pixelsg[6] = j;
-				pixelsr[6] = j;
-				pixelsb[6] = j;
-				if(j%8 == 0) { 
-					pixelsg[7] = j;
-					pixelsr[7] = j;
-					pixelsb[7] = j; 
-				}					
-				sleep_ms(50);
-			}
-			for (int j=30;j>0;--j){
-				pixelsb[0] = j;
-				if(j%8 == 0) { pixelsb[1] = j; }
-				pixelsr[2] = j;
-				if(j%8 == 0) { pixelsr[3] = j; }
-				pixelsg[4] = j;
-				if(j%8 == 0) { pixelsg[5] = j; }
-				pixelsg[6] = j;
-				pixelsr[6] = j;
-				pixelsb[6] = j;
-				if(j%8 == 0) { 
-					pixelsg[7] = j;
-					pixelsr[7] = j;
-					pixelsb[7] = j; 
-				}					
-				sleep_ms(50);
-			}
+        for(int i=0; i< STRING_LEN; ++i) {
+            pixelsr[i]=128;
+            pixelsg[i]=0;
+            pixelsb[i]=0;
+            sleep_ms(50);
         }
+        sleep_ms(500);
+
+        for(int i=0; i< STRING_LEN; ++i) {
+            pixelsr[i]=0;
+            pixelsg[i]=0;
+            pixelsb[i]=0;
+        }
+        sleep_ms(100);
+
+        for(int i=0; i< STRING_LEN; ++i) {
+            pixelsr[i]=0;
+            pixelsg[i]=255;
+            pixelsb[i]=0;
+            sleep_ms(50);
+        }
+        sleep_ms(500);
+
+        // for (int i = 0; i < 30; ++i) {
+		// 	for (int j=0;j<30;++j){
+		// 		pixelsb[0] = j;
+		// 		if(j%8 == 0) { pixelsb[1] = j; }
+		// 		pixelsr[2] = j;
+		// 		if(j%8 == 0) { pixelsr[3] = j; }
+		// 		pixelsg[4] = j;
+		// 		if(j%8 == 0) { pixelsg[5] = j; }
+		// 		pixelsg[6] = j;
+		// 		pixelsr[6] = j;
+		// 		pixelsb[6] = j;
+		// 		if(j%8 == 0) { 
+		// 			pixelsg[7] = j;
+		// 			pixelsr[7] = j;
+		// 			pixelsb[7] = j; 
+		// 		}					
+		// 		sleep_ms(50);
+		// 	}
+		// 	for (int j=30;j>0;--j){
+		// 		pixelsb[0] = j;
+		// 		if(j%8 == 0) { pixelsb[1] = j; }
+		// 		pixelsr[2] = j;
+		// 		if(j%8 == 0) { pixelsr[3] = j; }
+		// 		pixelsg[4] = j;
+		// 		if(j%8 == 0) { pixelsg[5] = j; }
+		// 		pixelsg[6] = j;
+		// 		pixelsr[6] = j;
+		// 		pixelsb[6] = j;
+		// 		if(j%8 == 0) { 
+		// 			pixelsg[7] = j;
+		// 			pixelsr[7] = j;
+		// 			pixelsb[7] = j; 
+		// 		}					
+		// 		sleep_ms(50);
+		// 	}
+        // }
     }
 }
