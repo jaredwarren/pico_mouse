@@ -1,11 +1,7 @@
 
 ##
 ### guides
-https://hutscape.com/tutorials/pico-neopixel - good one
-
-https://www.raspberrypi.org/blog/neopixel-dithering-with-pico/ - code doesn't work, but otherwise good
-
-https://www.hackster.io/naveenbskumar/raspberry-pi-pico-sound-activated-rgb-led-matrix-e11902 - Best, useable code
+https://github.com/raspberrypi/pico-examples/tree/master/usb/device/dev_hid_composite
 
 ### docs
 https://raspberrypi.github.io/pico-sdk-doxygen/group__hardware__pio.html
@@ -32,15 +28,15 @@ re-build
 `docker run -it --rm -v `pwd`:/mouse -w /mouse pico /bin/bash`
 
 $ `cd build`
-$ `make picolights`
+$ `make mouse`
 
 
 
 
-# picolights
+# mouse
 docker run -it --rm -v `pwd`:/mouse -w /mouse pico /bin/bash
 $ `cd build`
-$ `make picolights`
+$ `make mouse`
 
 
 
