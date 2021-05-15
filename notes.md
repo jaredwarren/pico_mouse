@@ -32,7 +32,7 @@ re-build
 `docker run -it --rm -v `pwd`:/mouse -w /mouse pico /bin/bash`
 
 $ `cd build`
-$ `make mouse`
+$ `make picolights`
 
 
 
