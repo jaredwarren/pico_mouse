@@ -7,9 +7,18 @@
 #include "hardware/gpio.h"
 // #include "hardware/adc.h"
 #include "ws2812.pio.h"
+#include "math.h"
 
 #define PIN_TX 0
 #define N_PIXELS 16
+
+#define PI 3.14159265
+
+#define A 64.0
+#define H 100.0
+#define B 64.0
+#define K 64.0
+#define STEPS 128 * PI
 
 static inline void put_pixel(uint32_t pixel_grb) {
     pio_sm_put_blocking(pio0, 0, pixel_grb << 8u);
@@ -20,6 +29,11 @@ static inline uint32_t urgb_u32(uint8_t r, uint8_t g, uint8_t b) {
             ((uint32_t) (r) << 8) |
             ((uint32_t) (g) << 16) |
             (uint32_t) (b);
+}
+
+static double getY(int j) {
+    // return A * sin(j / B);
+    return A * sin((j-H) / B)+K;
 }
 
 int main() {
@@ -70,46 +84,119 @@ int main() {
 
         long steps = 128;
 
-        // fade in
-        for(int j=0; j<steps; j++) {
+
+        double y = 0;
+
+
+       
+
+        // Red
+        for (int j = 0; j < STEPS; j++)
+        {
+            y = getY(j);
             for(int i=0; i<N_PIXELS; i++) {
-                pixels[i] = urgb_u32(j, 0, 0);
+                pixels[i] = urgb_u32(y, 0, 0);
                 put_pixel(pixels[i]);
             }
             sleep_ms(50);
-		}
+        }
         sleep_ms(250);
 
-        // fade out
-        for(int j=steps; j>0; j--) {
-            for(int i=0; i<N_PIXELS; i++) {
-                pixels[i] = urgb_u32(j, 0, 0);
+        // Blue
+        for (int j = 0; j < STEPS; j++)
+        {
+            y = getY(j);
+            for (int i = 0; i < N_PIXELS; i++)
+            {
+                pixels[i] = urgb_u32(0, 0, y);
                 put_pixel(pixels[i]);
             }
             sleep_ms(50);
-		}
+        }
         sleep_ms(250);
 
-        // blue
-        // fade in
-        for(int j=0; j<steps; j++) {
-            for(int i=0; i<N_PIXELS; i++) {
-                pixels[i] = urgb_u32(0, 0, j);
+        // gold 145 145 80
+        for (int j = 0; j < STEPS; j++)
+        {
+            y = getY(j);
+            for (int i = 0; i < N_PIXELS; i++)
+            {
+                pixels[i] = urgb_u32(((145/128)*y), ((145/128)*y), ((80/128)*y));
                 put_pixel(pixels[i]);
             }
             sleep_ms(50);
-		}
+        }
         sleep_ms(250);
 
-        // fade out
-        for(int j=steps; j>0; j--) {
-            for(int i=0; i<N_PIXELS; i++) {
-                pixels[i] = urgb_u32(0, 0, j);
+        // diamond 78 178 178
+        for (int j = 0; j < STEPS; j++)
+        {
+            y = getY(j);
+            for (int i = 0; i < N_PIXELS; i++)
+            {
+                pixels[i] = urgb_u32(((78/128)*y), ((178/128)*y), ((178/128)*y));
                 put_pixel(pixels[i]);
             }
             sleep_ms(50);
-		}
+        }
         sleep_ms(250);
+
+        // Green
+        for (int j = 0; j < STEPS; j++)
+        {
+            y = getY(j);
+            for (int i = 0; i < N_PIXELS; i++)
+            {
+                pixels[i] = urgb_u32(0, y, 0);
+                put_pixel(pixels[i]);
+            }
+            sleep_ms(50);
+        }
+        sleep_ms(250);
+
+        // // iron 107 88 74
+        // for (int j = 0; j < B * PI; j++)
+        // {
+        //     y = A * sin(j / B);
+        //     for (int i = 0; i < N_PIXELS; i++)
+        //     {
+        //         pixels[i] = urgb_u32(((107/128)*y), ((88/128)*y), ((74/128)*y));
+        //         put_pixel(pixels[i]);
+        //     }
+        //     sleep_ms(50);
+        // }
+        // sleep_ms(250);
+
+        // // fade out
+        // for(int j=steps; j>0; j--) {
+        //     for(int i=0; i<N_PIXELS; i++) {
+        //         pixels[i] = urgb_u32(j, 0, 0);
+        //         put_pixel(pixels[i]);
+        //     }
+        //     sleep_ms(50);
+		// }
+        // sleep_ms(250);
+
+        // // blue
+        // // fade in
+        // for(int j=0; j<steps; j++) {
+        //     for(int i=0; i<N_PIXELS; i++) {
+        //         pixels[i] = urgb_u32(0, 0, j);
+        //         put_pixel(pixels[i]);
+        //     }
+        //     sleep_ms(50);
+		// }
+        // sleep_ms(250);
+
+        // // fade out
+        // for(int j=steps; j>0; j--) {
+        //     for(int i=0; i<N_PIXELS; i++) {
+        //         pixels[i] = urgb_u32(0, 0, j);
+        //         put_pixel(pixels[i]);
+        //     }
+        //     sleep_ms(50);
+		// }
+        // sleep_ms(250);
 
         
         // sleep_ms(250);

@@ -25,22 +25,24 @@ func main() {
 		// A := 128.0
 		// f := 0.04
 
-		a := -1.0 // how hi
-		b := 22.0 // how long
-		steps := 10
+		a := 64.0 // how hi
+		b := 50.0 // how long
+		h := 80.0
+		k := 64.0
+		// steps := 10
 
-		max := 128.0
-		{
-			x := b * .5
-			b = (max - a*x*x) / x
-		}
+		// max := 128.0
+		// {
+		// 	x := b * .5
+		// 	b = (max - a*x*x) / x
+		// }
 
-		fmt.Println(a, b, steps, max, "------")
-
-		for i := 0; i < steps; i++ {
-			x := b * (float64(i) / float64(steps))
-			// y := A * math.Sin(f*float64(i))
-			y := a*x*x + b*x
+		for i := 0.0; i < 100*PI; i = i + 1 {
+			// x := b * (float64(i) / (b * PI))
+			// fmt.Println("x:", x)
+			// y := a * math.Sin(i/b)
+			y := a*math.Sin((i-h)/b) + k
+			// y := a*x*x + b*x
 
 			fmt.Print(int(math.Round(y)))
 			for j := 0; j < int(math.Round(y)); j++ {

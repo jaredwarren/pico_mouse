@@ -41,3 +41,8 @@ $ `make blink`
 docker run -it --rm -v `pwd`:/blink -w /blink pico /bin/bash
 $ `cd build`
 $ `make picolights`
+
+
+
+# calc sin
+https://www.desmos.com/calculator/w9jrdpvsmk
