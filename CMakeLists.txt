@@ -1,16 +1,12 @@
-cmake_minimum_required(VERSION 3.12)
+add_executable(dev_hid_composite
+        dev_hid_composite.c
+        usb_descriptors.c
+        )
 
-include(pico_sdk_import.cmake)
+target_include_directories(dev_hid_composite PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 
-project(picolights)
+target_link_libraries(dev_hid_composite PRIVATE pico_stdlib tinyusb_device tinyusb_board)
+pico_add_extra_outputs(dev_hid_composite)
 
-pico_sdk_init()
-
-add_executable(picolights)
-
-pico_generate_pio_header(picolights ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio)
-
-target_sources(picolights PRIVATE picolights.c)
-
-target_link_libraries(picolights PRIVATE pico_stdlib hardware_pio pico_multicore)
-pico_add_extra_outputs(picolights)
+# add url via pico_set_program_url
+example_auto_set_url(dev_hid_composite)

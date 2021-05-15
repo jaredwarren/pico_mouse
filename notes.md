@@ -20,25 +20,25 @@ Run: `docker run --rm pico  `
 
 ## building uf2
 
-`docker run -it --rm -v `pwd`:/blink -w /blink pico /bin/bash`
+`docker run -it --rm -v `pwd`:/mouse -w /mouse pico /bin/bash`
 
 first
 $ `mkdir build`
 $ `cd build`
 $ `cmake ..`
-$ `make blink`
+$ `make mouse`
 
 re-build
-`docker run -it --rm -v `pwd`:/blink -w /blink pico /bin/bash`
+`docker run -it --rm -v `pwd`:/mouse -w /mouse pico /bin/bash`
 
 $ `cd build`
-$ `make blink`
+$ `make mouse`
 
 
 
 
 # picolights
-docker run -it --rm -v `pwd`:/blink -w /blink pico /bin/bash
+docker run -it --rm -v `pwd`:/mouse -w /mouse pico /bin/bash
 $ `cd build`
 $ `make picolights`
 
