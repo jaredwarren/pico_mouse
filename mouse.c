@@ -29,12 +29,16 @@
 
 #include "bsp/board.h"
 #include "tusb.h"
+#include "pico/stdlib.h"
+#include "hardware/gpio.h"
 
 #include "usb_descriptors.h"
 
 //--------------------------------------------------------------------+
 // MACRO CONSTANT TYPEDEF PROTYPES
 //--------------------------------------------------------------------+
+
+#define BUTTON_GPIO (9)
 
 /* Blink pattern
  * - 250 ms  : device not mounted
@@ -56,15 +60,25 @@ void hid_task(void);
 /*------------- MAIN -------------*/
 int main(void)
 {
+    gpio_init(BUTTON_GPIO);
+    gpio_set_dir(BUTTON_GPIO, GPIO_IN);
+    // We are using the button to pull down to 0v when pressed, so ensure that when
+    // unpressed, it uses internal pull ups. Otherwise when unpressed, the input will
+    // be floating.
+    gpio_pull_up(BUTTON_GPIO);
+
+
     board_init();
     tusb_init();
 
-    while (1)
-    {
-        tud_task(); // tinyusb device task
-        led_blinking_task();
-
-        hid_task();
+    while (true) {
+        if (!gpio_get(BUTTON_GPIO)){
+            tud_task(); // tinyusb device task
+            //led_blinking_task();
+            hid_task();
+        } else {
+            led_blinking_task();
+        }
     }
 
     return 0;
@@ -136,34 +150,37 @@ void hid_task(void)
             tud_hid_mouse_report(REPORT_ID_MOUSE, 0x00, delta, delta, 0, 0);
 
             // delay a bit before attempt to send keyboard report
-            board_delay(10);
+            board_delay(100);
         }
     }
 
-    /*------------- Keyboard -------------*/
-    if (tud_hid_ready())
-    {
-        // use to avoid send multiple consecutive zero report for keyboard
-        static bool has_key = false;
+    // TODO: button:
+    // https: //github.com/raspberrypi/pico-examples/tree/master/gpio/hello_7segment
 
-        static bool toggle = false;
-        if (toggle = !toggle)
-        {
-            uint8_t keycode[6] = {0};
-            keycode[0] = HID_KEY_A;
+        /*------------- Keyboard -------------*/
+        // if (tud_hid_ready())
+        // {
+        //     // use to avoid send multiple consecutive zero report for keyboard
+        //     static bool has_key = false;
 
-            tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
+        //     static bool toggle = false;
+        //     if (toggle = !toggle)
+        //     {
+        //         uint8_t keycode[6] = {0};
+        //         keycode[0] = HID_KEY_A;
 
-            has_key = true;
-        }
-        else
-        {
-            // send empty key report if previously has key pressed
-            if (has_key)
-                tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, NULL);
-            has_key = false;
-        }
-    }
+        //         tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
+
+        //         has_key = true;
+        //     }
+        //     else
+        //     {
+        //         // send empty key report if previously has key pressed
+        //         if (has_key)
+        //             tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, NULL);
+        //         has_key = false;
+        //     }
+        // }
 }
 
 // Invoked when received GET_REPORT control request
