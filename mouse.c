@@ -38,7 +38,9 @@
 // MACRO CONSTANT TYPEDEF PROTYPES
 //--------------------------------------------------------------------+
 
-#define BUTTON_GPIO (9)
+const uint BUTTON_GPIO = 9;
+
+const uint LED_PIN = 25;
 
 /* Blink pattern
  * - 250 ms  : device not mounted
@@ -47,14 +49,17 @@
  */
 enum
 {
-    BLINK_NOT_MOUNTED = 250,
+    BLINK_NOT_MOUNTED = 150,
     BLINK_MOUNTED = 1000,
     BLINK_SUSPENDED = 2500,
 };
 
 static uint32_t blink_interval_ms = BLINK_NOT_MOUNTED;
 
+static bool active = 0;
+
 void led_blinking_task(void);
+void led_blinking_n(int8_t);
 void hid_task(void);
 
 /*------------- MAIN -------------*/
@@ -67,17 +72,23 @@ int main(void)
     // be floating.
     gpio_pull_up(BUTTON_GPIO);
 
+    // inti led
+    gpio_init(LED_PIN);
+    gpio_set_dir(LED_PIN, GPIO_OUT);
 
     board_init();
     tusb_init();
 
     while (true) {
+        tud_task(); // tinyusb device task
+        led_blinking_task();
+        hid_task();
         if (!gpio_get(BUTTON_GPIO)){
-            tud_task(); // tinyusb device task
-            //led_blinking_task();
-            hid_task();
+            // Down
+            active = true;
         } else {
-            led_blinking_task();
+            // Up
+            active = false;
         }
     }
 
@@ -129,6 +140,10 @@ void hid_task(void)
         return; // not enough time
     start_ms += interval_ms;
 
+    if (!active) {
+        return;
+    }
+
     uint32_t const btn = 1;
 
     // Remote wakeup
@@ -150,37 +165,9 @@ void hid_task(void)
             tud_hid_mouse_report(REPORT_ID_MOUSE, 0x00, delta, delta, 0, 0);
 
             // delay a bit before attempt to send keyboard report
-            board_delay(100);
+            board_delay(10);
         }
     }
-
-    // TODO: button:
-    // https: //github.com/raspberrypi/pico-examples/tree/master/gpio/hello_7segment
-
-        /*------------- Keyboard -------------*/
-        // if (tud_hid_ready())
-        // {
-        //     // use to avoid send multiple consecutive zero report for keyboard
-        //     static bool has_key = false;
-
-        //     static bool toggle = false;
-        //     if (toggle = !toggle)
-        //     {
-        //         uint8_t keycode[6] = {0};
-        //         keycode[0] = HID_KEY_A;
-
-        //         tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
-
-        //         has_key = true;
-        //     }
-        //     else
-        //     {
-        //         // send empty key report if previously has key pressed
-        //         if (has_key)
-        //             tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, NULL);
-        //         has_key = false;
-        //     }
-        // }
 }
 
 // Invoked when received GET_REPORT control request
@@ -211,6 +198,19 @@ void tud_hid_set_report_cb(uint8_t report_id, hid_report_type_t report_type, uin
 //--------------------------------------------------------------------+
 // BLINKING TASK
 //--------------------------------------------------------------------+
+void led_blinking_n(int8_t n)
+{
+    const uint32_t interval_ms = 250;
+    for (int8_t i = 0; i < n; i++)
+    {
+        gpio_put(LED_PIN, 1);
+        sleep_ms(interval_ms);
+        gpio_put(LED_PIN, 0);
+        sleep_ms(interval_ms);
+    }
+    
+}
+
 void led_blinking_task(void)
 {
     static uint32_t start_ms = 0;
